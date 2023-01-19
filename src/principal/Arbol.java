@@ -12,7 +12,6 @@ public class Arbol {
 	}
 
 	public Arbol(int id, String nombreComun, String nombreCientifico, String habitat, int altura, String origen) {
-		super();
 		this.id = id;
 		this.nombreComun = nombreComun;
 		this.nombreCientifico = nombreCientifico;
