@@ -5,8 +5,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 public class GestorArboles {
@@ -17,7 +15,13 @@ public class GestorArboles {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			Connection con = DriverManager.getConnection("jdbc:mysql://localhost/eh_garden", "root", "");
 			
-			PreparedStatement st = null;
+			PreparedStatement pstInsertar = con.prepareStatement("INSERT INTO arboles VALUES (null, ?, ?, ?, ?, ?)");
+			PreparedStatement pstEliminar = con.prepareStatement("DELETE FROM arboles WHERE id = ?");
+			PreparedStatement pstNN = con.prepareStatement("UPDATE arboles SET nombre_comun = ? WHERE id = ?");
+			PreparedStatement pstCN = con.prepareStatement("UPDATE arboles SET nombre_cientifico = ? WHERE id = ?");
+			PreparedStatement pstH = con.prepareStatement("UPDATE arboles SET habitat = ? WHERE id = ?");
+			PreparedStatement pstA = con.prepareStatement("UPDATE arboles SET altura = ? WHERE id = ?");
+			PreparedStatement pstO = con.prepareStatement("UPDATE arboles SET origen = ? WHERE id = ?");
 			//declaracion de constantes (final) para las opciones
 			final int INSERTAR = 1;
 			final int ELIMINAR = 2;
@@ -44,23 +48,23 @@ public class GestorArboles {
 					
 					System.out.println("Cual es su nombre?");
 					String nombreArbol = teclado.nextLine();
-					st.execute("INSERT INTO arboles (nombre_comun) VALUES ('" + nombreArbol + "')");
+					pstInsertar.setString(1, nombreArbol);
 					
 					System.out.println("Y su nombre cientifico?");
 					String nombreCientifico = teclado.nextLine();
-					st.execute("INSERT INTO arboles (nombre_cientifico) VALUES ('" + nombreCientifico + "')");
+					pstInsertar.setString(2, nombreCientifico);
 					
 					System.out.println("En que habitat habita?");
 					String habitatArbol = teclado.nextLine();
-					st.execute("INSERT INTO arboles (habitat) VALUES ('" + habitatArbol + "')");
+					pstInsertar.setString(3, habitatArbol);
 					
 					System.out.println("Cual es su altura");
 					int alturaArbol = teclado.nextInt();
-					st.execute("INSERT INTO arboles (altura) VALUES ('" + alturaArbol + "')");
+					pstInsertar.setString(4, habitatArbol);
 					
 					System.out.println("De donde proviene?");
 					String origenArbol = teclado.nextLine();
-					st.execute("INSERT INTO arboles (origen) VALUES ('" + origenArbol + "')");
+					pstInsertar.setString(5, origenArbol);
 					
 					break;
 				case ELIMINAR:
@@ -68,7 +72,7 @@ public class GestorArboles {
 					
 					System.out.println("Introduce el ID del arbol a eliminar: ");
 					int idEliminar = teclado.nextInt();
-					st.execute("DELETE FROM arboles WHERE id = '" + idEliminar + "'");
+					pstEliminar.setInt(1, idEliminar);
 					
 					break;
 				case MODIFICAR:
@@ -79,30 +83,40 @@ public class GestorArboles {
 					
 					System.out.println("Introduce nombre nuevo");
 					String nombreNuevo = teclado.nextLine();
-					st.execute("UPDATE arboles SET nombre_comun='" + nombreNuevo + "' WHERE id = '" + idModificar + "'");
+					pstNN.setString(1, nombreNuevo);
+					pstNN.setInt(2, idModificar);
+					pstNN.executeUpdate();
 					
 					System.out.println("Introduce nombre cientifico nuevo");
 					String nombreCientificoNuevo = teclado.nextLine();
-					st.execute("UPDATE arboles SET nombre_cientifico='" + nombreCientificoNuevo + "' WHERE id = '" + idModificar + "'");
+					pstCN.setString(1, nombreCientificoNuevo);
+					pstCN.setInt(2, idModificar);
+					pstCN.executeUpdate();
 					
 					System.out.println("Introduce habitat nuevo");
 					String habitatNuevo = teclado.nextLine();
-					st.execute("UPDATE arboles SET habitat='" + habitatNuevo + "' WHERE id = '" + idModificar + "'");
+					pstH.setString(1, habitatNuevo);
+					pstH.setInt(2, idModificar);
+					pstH.executeUpdate();
 					
 					System.out.println("Introduce nueva altura");
 					String alturaNuevo = teclado.nextLine();
-					st.execute("UPDATE arboles SET altura='" + alturaNuevo + "' WHERE id = '" + idModificar + "'");
+					pstA.setString(1, alturaNuevo);
+					pstA.setInt(2, idModificar);
+					pstA.executeUpdate();
 					
 					System.out.println("Introduce origen nuevo");
 					String origenNuevo = teclado.nextLine();
-					st.execute("UPDATE arboles SET origen='" + origenNuevo + "' WHERE id = '" + idModificar + "'");
+					pstO.setString(1, origenNuevo);
+					pstO.setInt(2, idModificar);
+					pstO.executeUpdate();
 					
 					break;
 				case VISUALIZAR:
 					System.out.println("Visualizando arboles...\n");
 					
 					String sentenciaSelect = "SELECT * FROM arboles";
-					ResultSet resultado = st.executeQuery(sentenciaSelect);
+					ResultSet resultado = pstInsertar.executeQuery(sentenciaSelect);
 					while (resultado.next()) {
 						System.out.println(resultado.getInt(1) + ". " + resultado.getString(2));
 					}
